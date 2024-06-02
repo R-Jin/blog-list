@@ -20,8 +20,32 @@ const favoriteBlog = (blogs) => {
   };
 };
 
+const mostBlogs = (blogs) => {
+  const authors = {};
+
+  blogs.forEach((blog) => {
+    if (blog.author in authors) {
+      ++authors[blog.author];
+    } else {
+      authors[blog.author] = 1;
+    }
+  });
+
+  console.log(authors);
+  let mostBlogs = null;
+
+  for (let author in authors) {
+    if (mostBlogs === null || mostBlogs.blogs < authors[author]) {
+      mostBlogs = { author, blogs: authors[author] };
+    }
+  }
+
+  return mostBlogs;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
