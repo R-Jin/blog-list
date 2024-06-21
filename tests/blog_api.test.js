@@ -17,6 +17,17 @@ test("Number of blogs returned are correct and in JSON format", async () => {
     assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
+test("Unique identifier of blog posts is 'id'", async () => {
+    const response = await api
+        .get("/api/blogs")
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    
+    const blogs = response.body
+    assert(blogs.every(blog => "id" in blog))
+})
+
 // Prepare the database with initial data
 beforeEach(async () => {
     await Blog.deleteMany({})
