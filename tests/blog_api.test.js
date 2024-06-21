@@ -63,18 +63,34 @@ test("Blog posts created without the like property on POST requests defaults to 
     assert.strictEqual(createdPost.likes, 0)
 })
 
-test("Creating blogs without title", async () => {
+test("Creating blogs without title results in 400 Bad Request", async () => {
     await api
         .post("/api/blogs")
         .send(blogWithoutTitle)
         .expect(400)
 })
 
-test("Creating blogs without url", async () => {
+test("Creating blogs without url results in 400 Bad Request", async () => {
     await api
         .post("/api/blogs")
         .send(blogWithoutUrl)
         .expect(400)
+})
+
+test("Deleting a blog results in its removal from the database", async () => {
+    const firstBlog = initialBlogs[0]
+
+    await api
+        .delete(`/api/blogs/${firstBlog._id}`)
+        .expect(204)
+
+    const response = await api
+        .get("/api/blogs")
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    assert.strictEqual(response.body.length, initialBlogs.length - 1)
+    assert(response.body.every(blog => blog.id !== firstBlog._id))
 })
 
 // Prepare the database with initial data
