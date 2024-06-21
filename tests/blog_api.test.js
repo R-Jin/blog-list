@@ -1,7 +1,7 @@
 const { test, after, beforeEach } = require("node:test")
 const assert = require("node:assert")
 const Blog = require("../models/blog")
-const { initialBlogs, listWithOneBlog, blogWithoutLikeProperty } = require("./testInput")
+const { initialBlogs, listWithOneBlog, blogWithoutLikeProperty, blogWithoutTitle, blogWithoutUrl } = require("./testInput")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
@@ -61,6 +61,20 @@ test("Blog posts created without the like property on POST requests defaults to 
 
     const createdPost = response.body.find(post => post.title === blogWithoutLikeProperty.title)
     assert.strictEqual(createdPost.likes, 0)
+})
+
+test("Creating blogs without title", async () => {
+    await api
+        .post("/api/blogs")
+        .send(blogWithoutTitle)
+        .expect(400)
+})
+
+test("Creating blogs without url", async () => {
+    await api
+        .post("/api/blogs")
+        .send(blogWithoutUrl)
+        .expect(400)
 })
 
 // Prepare the database with initial data

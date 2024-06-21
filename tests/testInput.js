@@ -60,8 +60,24 @@ const blogWithoutLikeProperty = {
     __v: 0,
   }
 
+const blogWithoutUrl = {
+    _id: "5a422aa71b54a676234d17f8",
+    title: "Go To Statement Considered Harmful",
+    author: "Edsger W. Dijkstra",
+    __v: 0,
+  }
+
+const blogWithoutTitle = {
+    _id: "5a422aa71b54a676234d17f8",
+    author: "Edsger W. Dijkstra",
+    url: "https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf",
+    __v: 0,
+  }
+
 module.exports = {
   initialBlogs,
   listWithOneBlog,
   blogWithoutLikeProperty,
+  blogWithoutTitle,
+  blogWithoutUrl,
 };
