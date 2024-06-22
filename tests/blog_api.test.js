@@ -4,6 +4,7 @@ const Blog = require("../models/blog")
 const { initialBlogs, listWithOneBlog, blogWithoutLikeProperty, blogWithoutTitle, blogWithoutUrl } = require("./testInput")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const config = require("../utils/config")
 const app = require("../app")
 
 const api = supertest(app)
@@ -91,6 +92,41 @@ test("Deleting a blog results in its removal from the database", async () => {
 
     assert.strictEqual(response.body.length, initialBlogs.length - 1)
     assert(response.body.every(blog => blog.id !== firstBlog._id))
+})
+
+test("Updating likes of an existing blog", async () => {
+    const firstBlog = initialBlogs[0]
+    const updatedBlog =  {
+        title: firstBlog.title,
+        author: firstBlog.author,
+        url: firstBlog.url,
+        likes: 0,
+    }
+
+    // Check that the likes of the blog is correct
+    let response = await api
+        .get('/api/blogs')
+
+    let blogs = response.body
+    let modifiedBlog = blogs.find(blog => blog.id === firstBlog._id)
+    assert.strictEqual(modifiedBlog.likes, 7)
+
+    // Update this blog
+    await api
+        .put(`/api/blogs/${firstBlog._id}`)
+        .send(updatedBlog)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+
+    // Check that the change was made correctly 
+    response = await api
+        .get('/api/blogs')
+
+    assert.strictEqual(response.body.length, initialBlogs.length)
+    blogs = response.body
+    modifiedBlog = blogs.find(blog => blog.id === firstBlog._id)
+    assert.strictEqual(modifiedBlog.likes, 0)
 })
 
 // Prepare the database with initial data

@@ -24,7 +24,7 @@ blogsRouter.delete("/:id", async (request, response) => {
 
 blogsRouter.put("/:id", async (request, response) => {
   const body = request.body
-  if (body.title && body.author && body.url && body.likes) {
+  if ("title" in body && "author" in body && "url" in body && "likes" in body) {
     const updatedBlog = {
       title: body.title,
       author: body.author,
